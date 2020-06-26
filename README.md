@@ -6,8 +6,7 @@ Ponts:
 - Used JsInterface for Achieving Handlers functionality
 - RecyclerView to show progress Indicator(Multiple Progress Indicator)
 - Realtime Update on Ui thread.
-
-***Some of the screenshots of this app: *** 
+# Some Screen Shots Of App
 <img src="https://github.com/atul161/Task/blob/master/screenshots/img1.jpeg" alt="screenshots" width="200"/>
 <img src="https://github.com/atul161/Task/blob/master/screenshots/img2.jpeg" alt="screenshots" width="200"/>
 <img src="https://github.com/atul161/Task/blob/master/screenshots/img3.jpeg" alt="screenshots" width="200"/>
