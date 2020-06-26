@@ -47,14 +47,15 @@ public class JsInterface {
                  break;
              }
         }
+
         if (isProgress){
             ProgressModel pr =  new ProgressModel(jsonObject.get("id").toString(),jsonObject.get("message").toString(), Integer.parseInt(jsonObject.get("progress").toString()));
-            progressModel.set(Integer.parseInt(jsonObject.get("id").toString())-1 , pr);
+            progressModel.set(Integer.parseInt(jsonObject.get("id").toString()) , pr);
 
         }else {
             ProgressModel pq = progressModel.get(Integer.parseInt(jsonObject.get("id").toString()));
             ProgressModel pr =  new ProgressModel(jsonObject.get("id").toString(),jsonObject.get("message").toString(), pq.getProgress());
-            progressModel.set(Integer.parseInt(jsonObject.get("id").toString())-1 , pr);
+            progressModel.set(Integer.parseInt(jsonObject.get("id").toString()) , pr);
         }
 
     }

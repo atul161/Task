@@ -5,7 +5,7 @@ package com.example.deqodetask.Model;
 public class ProgressModel {
     String operation = "Operation:" ;
     String message = "Message:" ;
-    int progress = 1;
+    int progress = 0;
 
     public String getOperation() {
         return operation;
