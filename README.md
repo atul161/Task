@@ -1,10 +1,10 @@
 # Task
 #How I Achieved this?
-1)Used Download Manager For Downloading Js File(We Need only  one time to download)
-2)Downloading Js File and Injecting js code to html
-3)Used JsInterface for Achieving Handlers functionality
-4)RecyclerView to show progress Indicator(Multiple Progress Indicator)
-5)Realtime Update on Ui thread.
+*Used Download Manager For Downloading Js File(We Need only  one time to download)
+*Downloading Js File and Injecting js code to html
+*Used JsInterface for Achieving Handlers functionality
+*RecyclerView to show progress Indicator(Multiple Progress Indicator)
+*Realtime Update on Ui thread.
 Some Screen Shot Added
 
 Some of the screenshots of this app:  
