@@ -1,10 +1,4 @@
 # Task
-<<<<<<< HEAD
-#How I Achieve?
-
-Some Screen Shot Added
-
-Some of the screenshots of this app:
 # How I Achieved this?
 Ponts:
 - Used Download Manager For Downloading Js File(We Need only  one time to download)
