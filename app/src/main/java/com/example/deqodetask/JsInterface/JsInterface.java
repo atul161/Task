@@ -49,9 +49,6 @@ public class JsInterface {
              }
         }
 
-        System.out.println(msg);
-
-
         if (isProgress){
             ProgressModel pr =  new ProgressModel(jsonObject.get("id").toString(),jsonObject.get("message").toString(), Integer.parseInt(jsonObject.get("progress").toString()));
             progressModel.set(Integer.parseInt(jsonObject.get("id").toString()) , pr);
