@@ -298,7 +298,7 @@ public class MainActivity extends AppCompatActivity {
             public void onPageFinished(WebView view, String weburl){
 
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-                    for (int i = 0 ; i < nProgress ; i ++ ){
+                    for (int i = 1 ; i <= nProgress ; i ++ ){
                         webView.evaluateJavascript("startOperation("+Integer.toString(i)+");", null);
                     }
                 }

@@ -38,7 +38,6 @@ public class JsInterface {
         } catch (Throwable t) {
             Log.e("My App", "Could not parse malformed JSON");
         }
-
         boolean isProgress = false;
         Iterator keys = jsonObject.keys();
         while (keys.hasNext()){
@@ -48,15 +47,14 @@ public class JsInterface {
                  break;
              }
         }
-
         if (isProgress){
             ProgressModel pr =  new ProgressModel(jsonObject.get("id").toString(),jsonObject.get("message").toString(), Integer.parseInt(jsonObject.get("progress").toString()));
-            progressModel.set(Integer.parseInt(jsonObject.get("id").toString()) , pr);
+            progressModel.set(Integer.parseInt(jsonObject.get("id").toString())-1 , pr);
 
         }else {
             ProgressModel pq = progressModel.get(Integer.parseInt(jsonObject.get("id").toString()));
             ProgressModel pr =  new ProgressModel(jsonObject.get("id").toString(),jsonObject.get("message").toString(), pq.getProgress());
-            progressModel.set(Integer.parseInt(jsonObject.get("id").toString()) , pr);
+            progressModel.set(Integer.parseInt(jsonObject.get("id").toString())-1 , pr);
         }
 
     }
