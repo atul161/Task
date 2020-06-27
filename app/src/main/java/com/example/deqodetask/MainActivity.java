@@ -275,7 +275,7 @@ public class MainActivity extends AppCompatActivity {
         webSettings.setJavaScriptEnabled(true);
         webView.setWebChromeClient(new WebChromeClient());
         webView.addJavascriptInterface(new JsInterface(getApplicationContext() ,  recyclerViewAdapter ,progressModel ),Helper.BRIDGE);
-        webView.loadData(Helper.injectJsToHtml(Helper.JsCode), "text/html", null);
+        webView.loadDataWithBaseURL(null,helper.injectJsToHtml(Helper.JsCode), "text/html", "utf-8",null);
         webView.setWebViewClient(new WebViewClient(){
             public void onPageFinished(WebView view, String weburl){
 
