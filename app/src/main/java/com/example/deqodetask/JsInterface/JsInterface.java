@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.deqodetask.MainActivity;
 import com.example.deqodetask.Model.ProgressModel;
+import com.example.deqodetask.Utils.Helper;
 import com.example.deqodetask.adapter.JsViewAdapter;
 
 import org.json.JSONException;
@@ -48,14 +49,37 @@ public class JsInterface {
              }
         }
 
+
+        System.out.println(msg);
         if (isProgress){
-            ProgressModel pr =  new ProgressModel(jsonObject.get("id").toString(),jsonObject.get("message").toString(), Integer.parseInt(jsonObject.get("progress").toString()));
-            progressModel.set(Integer.parseInt(jsonObject.get("id").toString()) , pr);
+            for (int i = 0; i < Helper.TASK; i++){
+                if (Integer.toString(progressModel.get(i).getGuid()).equals(jsonObject.get("id").toString())){
+                    ProgressModel pr = new ProgressModel(
+                      Integer.toString(i),
+                      jsonObject.get("message").toString(),
+                      Integer.parseInt(jsonObject.get("progress").toString()),
+                      Integer.parseInt(jsonObject.get("id").toString())
+                    );
+                    progressModel.set(i ,pr);
+                    MainActivity.getInstance().notifyModel(progressModel);
+                    break;
+                }
+            }
 
         }else {
-            ProgressModel pq = progressModel.get(Integer.parseInt(jsonObject.get("id").toString()));
-            ProgressModel pr =  new ProgressModel(jsonObject.get("id").toString(),jsonObject.get("message").toString(), pq.getProgress());
-            progressModel.set(Integer.parseInt(jsonObject.get("id").toString()) , pr);
+            for (int i =0 ; i < Helper.TASK ; i++){
+                if (Integer.toString(progressModel.get(i).getGuid()).equals(jsonObject.get("id").toString())){
+                    ProgressModel pr = new ProgressModel(
+                            Integer.toString(i),
+                            jsonObject.get("message").toString(),
+                            progressModel.get(i).getProgress(),
+                            Integer.parseInt(jsonObject.get("id").toString())
+                    );
+                    progressModel.set(i ,pr);
+                    MainActivity.getInstance().notifyModel(progressModel);
+                    break;
+                }
+            }
         }
 
     }

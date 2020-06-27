@@ -23,6 +23,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Looper;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
@@ -33,6 +34,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crowdfire.cfalertdialog.CFAlertDialog;
@@ -48,26 +50,30 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.concurrent.ThreadLocalRandom;
 
 
 public class MainActivity extends AppCompatActivity {
 
 
-    //let us Assume there will be 50 progress Task
-    private int count = 100;
     // Defining Permission codes.
     // We can give any value
     // but unique for each permission.
+    private  Handler handler;
     private    RecyclerView rvVertical;
     private   final int PERMISSIONS_MULTIPLE_REQUEST = 123;
-    public ArrayList<ProgressModel> progressModel;
-    boolean isPermissionAvail = false;
-    String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString();
-    Helper helper = new Helper();
+    private ArrayList<ProgressModel> progressModel;
+    private boolean isPermissionAvail = false;
+    private String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString();
+    private Helper helper = new Helper();
     private  JsViewAdapter recyclerViewAdapter;
-    boolean isPer = false;
+    static MainActivity mainActivity;
+    private  boolean isPer = false;
     private ProgressBar progressBar;
+    private BroadcastReceiver broadcastReceiver;
+    private TextView textView ;
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,34 +83,24 @@ public class MainActivity extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        textView = findViewById(R.id.internet);
         progressBar = findViewById(R.id.progressBar_cyclic);
+        handler= new Handler(Looper.getMainLooper());
+        mainActivity = this;
+        //If file does not exist
+        if(helper.haveNetworkConnection(getApplicationContext() )|| helper.isFileExisit(path)){
+          textView.setVisibility(View.GONE);
+        }
+
         //Checking the permission
         //Below Marshmallow we dont need to check
         //Above marsh mallow need runtime permission
         //When the download will be complete this broadcast will be called from
         //Download Manager
         checkAndroidVersion();
-        //If file does not exisit
-         if (!helper.isFileExisit(path)){
-             if(!helper.haveNetworkConnection(getApplicationContext())){
-                 CFAlertDialog.Builder builder = new CFAlertDialog.Builder(this)
-                         .setDialogStyle(CFAlertDialog.CFAlertStyle.ALERT)
-                         .setTitle("Js Download , Need Internet!")
-                         .setMessage("First time when you will install our app we need to download js file")
-                         .addButton("QUIT", -1, -1, CFAlertDialog.CFAlertActionStyle.NEGATIVE, CFAlertDialog.CFAlertActionAlignment.JUSTIFIED, (dialog, which) -> {
-                             dialog.dismiss();
-                             finish();
-                         }).addButton("Retry", -1 ,-1 , CFAlertDialog.CFAlertActionStyle.POSITIVE, CFAlertDialog.CFAlertActionAlignment.JUSTIFIED, (dialog, which) -> {
-                            if (helper.haveNetworkConnection(getApplicationContext())){
-                                dialog.dismiss();
-                            }
-                         });
-                 builder.setCancelable(false);
-                 builder.show();
-             }
-         }
         rvVertical = findViewById(R.id.rvVertical);
-        BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        broadcastReceiver = new BroadcastReceiver() {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onReceive(Context context, Intent intent) {
                 String action = intent.getAction();
@@ -116,17 +112,17 @@ public class MainActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                     progressModel = new ArrayList<>();
-                    for (int i = 0; i < count; i++) {
-                        progressModel.add(new ProgressModel(Integer.toString(i), "Error", 0));
+                    for (int i = 0; i < Helper.TASK; i++) {
+                        progressModel.add(new ProgressModel(Integer.toString(i), "Error", 0,ThreadLocalRandom.current().nextInt()));
                     }
                     progressModel.remove(0);
-                  recyclerViewAdapter = new JsViewAdapter(MainActivity.this, progressModel);
+                    recyclerViewAdapter = new JsViewAdapter(MainActivity.this, progressModel);
 
                     rvVertical.setAdapter(recyclerViewAdapter);
                     progressBar.setVisibility(View.GONE);
                     //setup web view
                     //here you can modify no of progress you want
-                    setUpWebView(count , progressModel);
+                    setUpWebView(Helper.TASK, progressModel);
                 }
             }
 
@@ -136,54 +132,38 @@ public class MainActivity extends AppCompatActivity {
 
         if (isPermissionAvail){
             progressModel = new ArrayList<>();
-            for (int i = 0; i < count; i++) {
-                progressModel.add(new ProgressModel(Integer.toString(i), "Error", 0));
+            for (int i = 0; i < Helper.TASK; i++) {
+                progressModel.add(new ProgressModel(Integer.toString(i), "Error", 0, ThreadLocalRandom.current().nextInt()));
             }
           recyclerViewAdapter = new JsViewAdapter(MainActivity.this, progressModel);
             rvVertical.setAdapter(recyclerViewAdapter);
             progressBar.setVisibility(View.GONE);
-            setUpWebView(count , progressModel);
+            setUpWebView(Helper.TASK , progressModel);
 
         }
 
     }
 
-    Handler handler = new Handler();
-    Runnable runnable;
-    int delay = 1*1000; //Delay for 15 seconds.  One second = 1000 milliseconds.
-    @Override
-    protected void onResume() {
-        //start handler as activity become visible
-            handler.postDelayed( runnable = new Runnable() {
-                public void run() {
-                    //do something
-                    if ( recyclerViewAdapter != null){
-                        recyclerViewAdapter.notifyDataSetChanged();
-                    }
-                    handler.postDelayed(runnable, delay);
-                }
-            }, delay);
 
-        super.onResume();
-    }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
 
+    public static MainActivity getInstance(){
+        return   mainActivity;
     }
 
 
-    // If onPause() is not included the threads will double up when you
-// reload the activity
 
-    @Override
-    protected void onPause() {
-        if (isPer){
-            handler.removeCallbacks(runnable); //stop handler when activity not visible
-        }
-        super.onPause();
+    public void notifyModel(ArrayList<ProgressModel> progressModel){
+        this.progressModel = progressModel;
+        handler.post(new Runnable() {
+            public void run()
+            {
+               recyclerViewAdapter.notifyDataSetChanged();
+            }
+        });
     }
+
+
 
 
 
@@ -300,13 +280,21 @@ public class MainActivity extends AppCompatActivity {
             public void onPageFinished(WebView view, String weburl){
 
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-                    for (int i = 0 ; i <nProgress ; i ++ ){
-                        webView.evaluateJavascript("startOperation("+Integer.toString(i)+");", null);
+                    for (int i = 0 ; i <Helper.TASK-1 ; i ++ ){
+                        if (progressModel.get(i) != null)
+                        webView.evaluateJavascript("startOperation("+progressModel.get(i).getGuid()+");", null);
+                        recyclerViewAdapter.notifyDataSetChanged();
                     }
                 }
             }
-            
-        });
+
+                @Override
+           public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                              return false;
+                }
+              }
+
+        );
 
     }
 

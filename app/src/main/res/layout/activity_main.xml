@@ -26,6 +26,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
+    <TextView
+        android:id="@+id/internet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Internet is Unavailaible please \nreopen the app!"
+        android:textColor="#123"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/rvVertical"
+        app:layout_constraintStart_toStartOf="@+id/rvVertical"
+        app:layout_constraintTop_toTopOf="@+id/toolbar"></TextView>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvVertical"
         android:layout_width="match_parent"

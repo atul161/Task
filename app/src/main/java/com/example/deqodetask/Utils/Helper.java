@@ -29,7 +29,7 @@ public class Helper {
     public static final String BRIDGE = "Bridge";
     //JsCode will be updated when ever we the download complete
     public static String JsCode = null;
-
+    public static final int TASK = 20;
     //Reading the javascript file
     //Reading from the downloaded javascript file
     //and replacing WebKit to Bridge bcz according to documentation
